@@ -1,8 +1,10 @@
 - name: use condition in ansible
   hosts: local
   connection: local
-  vars:
-    number: 5
+  vars_prompt:
+    - name: number
+      prompt: "Enter the number:"
+      private: false    
   tasks:
   - name: check number is less than 10 or not
     ansible.builtin.debug:
