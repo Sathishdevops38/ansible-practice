@@ -1,0 +1,9 @@
+- name: Install linux package
+  hosts: catalogue
+  become: yes
+  tasks:
+  - name: intsall nginx package
+    ansible.builtin.package:
+      name: nginx
+      state: present
+      enable: yes
