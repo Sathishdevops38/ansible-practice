@@ -1,0 +1,18 @@
+- name: To print vars from inventory
+  hosts: local
+  connection: local
+  vars:
+  course: "DesSecOps with Aws"
+  duration: 120
+  is_live: true
+  tools: #["linux","shell","ansible"]
+  - "linux"
+  - "shell"
+  - "ansible"
+  concepts:
+    cloud: Aws
+    cm: ansible
+  tasks:
+  - name: to print all data types variables
+    ansible.builtin.debug:
+    msg: "course details {{ course }}, duration: {{ duration }}, is_live: {{ is_live }}, tools: {{ tools }}, concepts: {{ concepts }}"
