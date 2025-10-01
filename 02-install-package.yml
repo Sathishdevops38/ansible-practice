@@ -6,4 +6,8 @@
     ansible.builtin.package:
       name: nginx
       state: present
+  - name: Ensure Nginx service is running and enabled at boot
+    ansible.builtin.service:
+      name: nginx
+      state: started
       enabled: yes
