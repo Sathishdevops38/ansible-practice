@@ -1,0 +1,11 @@
+- name: To print course details using task variables
+  hosts: local
+  connection: local
+  tasks:
+  - name: To print task variables  
+  vars:
+    COURSE: Ansible
+    DURATION: 10hrs
+    TRAINER: GOD
+    ansible.builtin.debug:
+      msg: "courese details are course: {{ COURSE }}, duration:{{ DURATION }}, Trainer: {{ TRAINER }}"
