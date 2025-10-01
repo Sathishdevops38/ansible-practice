@@ -15,4 +15,4 @@
   tasks:
   - name: to print all data types variables
     ansible.builtin.debug:
-    msg: "course details {{ course }}, duration: {{ duration }}, is_live: {{ is_live }}, tools: {{ tools }}, concepts: {{ concepts }}"
+      msg: "course details {{ course }}, duration: {{ duration }}, is_live: {{ is_live }}, tools: {{ tools }}, concepts: {{ concepts }}"
