@@ -1,15 +1,10 @@
 - name: use condition in ansible
   hosts: local
   connection: local
-  vars_prompt:
-    - name: number
-      prompt: "Enter the number"
-      private: false    
+  vars:
+    number:  5   
   tasks:
-  - name: convert string to integer
+  - name: check number is less than 10 or not
     ansible.builtin.debug:
-      msg: "The Number is {{ number | int  }} "
-  - name: check the number is less than 10
-    ansible.builtin.debug:
-      msg: "The Number is {{ number }} is less than 10"
+      msg: "The number {{ number }} is less than 10"
     when: number<10
