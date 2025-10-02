@@ -1,0 +1,14 @@
+---
+- name: Install multiple packages
+  hosts: local
+  connection: local
+  become: yes
+  tasks:
+    - name: Install packages
+      yum:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - httpd
+        - mariadb-server
+        - php
