@@ -13,3 +13,14 @@
         result: "{{ my_string_var | int + 5 }}"
     - debug:
         msg: "The result of addition is {{ result }}"
+    
+    - name: Convert string to Float and use it
+      debug:
+        msg: "The integer value is {{ my_string_var | float }}"
+
+    - name: Perform arithmetic with the converted integer
+      set_fact:
+        result2: "{{ my_string_var | float + 5 }}"
+    - debug:
+        msg: "The result of addition is {{ result2 }}"    
+      
