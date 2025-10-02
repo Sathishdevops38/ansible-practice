@@ -1,0 +1,15 @@
+---
+- name: To Convert str to int
+  hosts: localhost
+  vars:
+    my_string_var: "123"
+  tasks:
+    - name: Convert string to integer and use it
+      debug:
+        msg: "The integer value is {{ my_string_var | int }}"
+
+    - name: Perform arithmetic with the converted integer
+      set_fact:
+        result: "{{ my_string_var | int + 5 }}"
+    - debug:
+        msg: "The result of addition is {{ result }}"
