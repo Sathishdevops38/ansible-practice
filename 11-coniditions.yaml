@@ -5,6 +5,6 @@
     number:  5   
   tasks:
   - name: check number is less than 10 or not
-    ansible.builtin.debug:
+    ansible.builtin.debug: #debug
       msg: "The number {{ number }} is less than 10"
     when: number<10
