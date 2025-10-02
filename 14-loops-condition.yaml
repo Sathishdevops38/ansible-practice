@@ -1,0 +1,20 @@
+- name: Install required packages
+  hosts: all
+  become: yes
+  vars:
+    packages_to_manage:
+      - name: httpd
+        required: true
+      - name: mariadb
+        required: false
+      - name: php
+        required: true
+      - name: nginx
+        required: false
+  tasks:
+    - name: Install packages based on 'required' status
+      ansible.builtin.package:  #yum
+        name: "{{ item.name }}"
+        state: present
+      loop: "{{ packages_to_manage }}"
+      when: item.required == true
