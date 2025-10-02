@@ -6,7 +6,10 @@
       prompt: "Enter the number"
       private: false    
   tasks:
-  - name: check number is less than 10 or not
+  - name: convert string to integer
     ansible.builtin.debug:
-      msg: "given number {{ number | int + 10 }} is less than 10"
+      msg: "The Number is {{ number | int  }} "
+  - name: check the number is less than 10
+    ansible.builtin.debug:
+      msg: "The Number is {{ number }} is less than 10"
     when: number<10
