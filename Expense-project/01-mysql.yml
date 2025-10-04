@@ -13,7 +13,7 @@
       enabled: yes
   - name: Copy my config file to DB server
     ansible.builtin.copy:
-      src: /root/Expense/.my.cnf
+      src: ./.my.cnf
       dest: /root/
       owner: root
       group: root
