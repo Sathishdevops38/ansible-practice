@@ -1,0 +1,57 @@
+- name: backend for expense app
+  hosts: backend
+  become: yes
+  tasks:
+  - name: Disable the nodejs DNF module stream
+    community.general.module_action:
+      name: nodejs
+      state: disabled
+  - name: Enable the nodejs 20 DNF module stream
+    community.general.module_action:
+      name: nodejs:20
+      state: enabled
+  - name: Install the nodejs package
+    ansible.builtin.package:
+      name: nodejs
+      state: present
+  - name: Create user 'expense' with default settings
+    ansible.builtin.user:
+      name: expense
+      state: present
+  - name: Ensure the /app directory exists
+    ansible.builtin.file:
+      path: /app
+      state: directory
+  - name: Run multiple commands sequentially (install, then check version)
+    ansible.builtin.shell:
+      cmd: |
+        curl -o /tmp/backend.zip https://expense-joindevops.s3.us-east-1.amazonaws.com/expense-backend-v2.zip
+        cd /app
+        unzip /tmp/backend.zip &
+        cd /app
+        npm install &
+  - name: Copy a file from one location to another, all on the remote server
+    ansible.builtin.copy:
+      src: ./backend.service
+      dest: /etc/systemd/system/backend.service
+      # remote_src: yes # <-- This is the key difference
+  - name: Reload the systemd daemon
+    ansible.builtin.systemd_service:
+      daemon_reload: yes
+  - name: started service backend
+    ansible.builtin.service:
+      name: backend
+      state: started
+      enabled: yes
+  - name: Run mysql command via shell module
+    ansible.builtin.shell:
+      cmd: mysql -h {{ mysql_host }} -uroot -p{{ mysql_password | quote }} < /app/schema/backend.sql
+    vars:
+      mysql_host: mysql.daws38sat.fun
+      mysql_password: "ExpenseApp@1" # Use quotes around passwords with special characters
+  - name: started service backend
+    ansible.builtin.service:
+      name: backend
+      state: restarted    
+   
+  
