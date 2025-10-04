@@ -2,28 +2,29 @@
   hosts: backend
   become: yes
   
-  # BEST PRACTICE: Explicitly declare the collections you rely on
-  collections:
-    - community.general
-
   tasks:
+  
+  # ALTERNATIVE FOR community.general.module_action (using command)
   - name: Disable the nodejs DNF module stream
-    community.general.module_action:
-      name: nodejs
-      state: disabled
+    ansible.builtin.command:
+      cmd: dnf module disable -y nodejs
+    # Ignore errors if the module stream is not currently enabled
+    ignore_errors: true 
+    # Use 'changed_when: false' if you prefer to not report a change 
+    # when the module was already disabled.
 
+  # ALTERNATIVE FOR community.general.module_action (using command)
   - name: Enable the nodejs 20 DNF module stream
-    community.general.module_action:
-      name: nodejs:20
-      state: enabled
+    ansible.builtin.command:
+      cmd: dnf module enable -y nodejs:20
 
   - name: Install the nodejs package
     ansible.builtin.package:
       name: nodejs
       state: present
 
-  # ... (Rest of your original playbook tasks)
-  
+  # --- (Rest of your original playbook tasks remain the same) ---
+      
   - name: Create user 'expense' with default settings
     ansible.builtin.user:
       name: expense
@@ -34,6 +35,7 @@
       path: /app
       state: directory
   
+  # This task is error-prone, but preserved as requested
   - name: Run multiple commands sequentially (install, then check version)
     ansible.builtin.shell:
       cmd: |
@@ -58,6 +60,8 @@
       state: started
       enabled: yes
   
+  # Note: The mysql_db module also comes from 'community.mysql', 
+  # so this shell command is the correct 'ansible.builtin' alternative.
   - name: Run mysql command via shell module
     ansible.builtin.shell:
       cmd: mysql -h {{ mysql_host }} -uroot -p{{ mysql_password | quote }} < /app/schema/backend.sql
@@ -68,6 +72,4 @@
   - name: started service backend
     ansible.builtin.service:
       name: backend
-      state: restarted 
-   
-  
+      state: restarted
