@@ -1,6 +1,9 @@
 - name: backend for expense app
   hosts: backend
   become: yes
+  vars:
+      mysql_host: mysql.daws38sat.fun
+      mysql_password: "ExpenseApp@1"
   tasks:
   - name: Disable the nodejs DNF module stream
     ansible.builtin.command:
@@ -63,11 +66,8 @@
   # so this shell command is the correct 'ansible.builtin' alternative.
   - name: Run mysql command via shell module
     ansible.builtin.shell:
-      cmd: mysql -h {{ mysql_host }} -uroot -p{{ mysql_password | quote }} < /app/schema/backend.sql
-    vars:
-      mysql_host: mysql.daws38sat.fun
-      mysql_password: "ExpenseApp@1"
-  
+      cmd: |
+        mysql -h {{ mysql_host }} -uroot -p{{ mysql_password | quote }} < /app/schema/backend.sql  
   - name: started service backend
     ansible.builtin.service:
       name: backend
