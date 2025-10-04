@@ -1,17 +1,11 @@
 - name: backend for expense app
   hosts: backend
   become: yes
-  
   tasks:
-  
-  # ALTERNATIVE FOR community.general.module_action (using command)
   - name: Disable the nodejs DNF module stream
     ansible.builtin.command:
       cmd: dnf module disable -y nodejs
-    # Ignore errors if the module stream is not currently enabled
     ignore_errors: true 
-    # Use 'changed_when: false' if you prefer to not report a change 
-    # when the module was already disabled.
 
   # ALTERNATIVE FOR community.general.module_action (using command)
   - name: Enable the nodejs 20 DNF module stream
@@ -59,6 +53,11 @@
       name: backend
       state: started
       enabled: yes
+
+  - name: Install mysql
+    ansible.builtin.package:
+      name: mysql
+      state: present
   
   # Note: The mysql_db module also comes from 'community.mysql', 
   # so this shell command is the correct 'ansible.builtin' alternative.
