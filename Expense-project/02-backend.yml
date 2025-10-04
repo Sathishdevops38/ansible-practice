@@ -65,9 +65,7 @@
   # Note: The mysql_db module also comes from 'community.mysql', 
   # so this shell command is the correct 'ansible.builtin' alternative.
   - name: Run mysql command via shell module
-    ansible.builtin.shell:
-      cmd: |
-        mysql -h {{ mysql_host }} -uroot -p{{ mysql_password | quote }} < /app/schema/backend.sql  
+    ansible.builtin.shell: "mysql -h {{ mysql_host }} -uroot -p{{ mysql_password }} < /app/schema/backend.sql"  
   - name: started service backend
     ansible.builtin.service:
       name: backend
