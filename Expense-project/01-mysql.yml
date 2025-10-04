@@ -11,3 +11,10 @@
       name: mysqld
       state: started
       enabled: yes
+  - name: Copy my config file to DB server
+    ansible.builtin.copy:
+      src: /root/Expense/.my.cnf
+      dest: /root/
+      owner: root
+      group: root
+      mode: "0600"    
