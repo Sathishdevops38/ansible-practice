@@ -17,8 +17,8 @@
       image_id: "{{ ami_id }}"
       subnet_id: subnet-06dc23984fd523dd0
       state: present
-    tags:
-      Name: "{{ item }}"
+      tags:
+        Name: "{{ item }}"
     loop: "{{ instances }}"
     register: ec2-output
 
