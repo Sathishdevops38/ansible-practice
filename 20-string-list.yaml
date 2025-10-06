@@ -1,0 +1,9 @@
+- name: Conversions
+  hosts: local
+  connection: local
+  vars:
+    techs: Devops, linux, Shell, Ansible 
+  tasks:
+  - name: convert string to list
+    ansible.builtin.debug:
+      msg: "Technologies: {{ techs | split(',') }}"
