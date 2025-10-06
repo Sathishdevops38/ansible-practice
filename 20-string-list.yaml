@@ -2,8 +2,13 @@
   hosts: local
   connection: local
   vars:
-    techs: Devops, linux, Shell, Ansible 
+    techs: Devops, linux, Shell, Ansible
+    fruits: [apple, bannana, guva]  
   tasks:
   - name: convert string to list
     ansible.builtin.debug:
       msg: "Technologies: {{ techs | split(',') }}"
+      
+  - name: convert dict to list
+    ansible.builtin.debug:
+      msg: "Fruits: {{  fruits | dict2items }}"
