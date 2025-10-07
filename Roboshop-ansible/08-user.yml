@@ -47,9 +47,8 @@
       dest: /etc/systemd/system/user.service
 
   - name: start daemon service
-    ansible.builtin.service:
-      name: daemon-reload
-      state: restarted
+    ansible.builtin.systemd:
+      daemon_reload: yes
 
   - name: start user service
     ansible.builtin.service:
