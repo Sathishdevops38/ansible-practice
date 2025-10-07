@@ -1,0 +1,73 @@
+- name: setup shipping service
+  hosts: shipping
+  become: yes
+  tasks:
+  - name: install maven 
+    ansible.builtin.package:
+      name: maven
+      state: present
+  - name: create roboshop system user
+    ansible.builtin.user:
+      name: roboshop
+      comment: RoboShop System user
+      system: true
+      shell: /sbin/nologin
+      home: /app
+
+  - name: create app directory
+    ansible.builtin.file:
+      state: directory
+      path: /app
+  
+  - name: download shipping application
+    ansible.builtin.get_url:
+      url: https://roboshop-artifacts.s3.amazonaws.com/shipping-v3.zip
+      dest: /tmp/shipping.zip
+
+  - name: extract shipping application
+    ansible.builtin.unarchive:
+      src: /tmp/shipping.zip
+      dest: /app
+      remote_src: yes
+  
+  - name: mvn artifact 
+    ansible.builtin.command: |
+      cd /app 
+      mvn clean package 
+      mv target/shipping-1.0.jar shipping.jar
+  
+  - name: copy shipping service
+    ansible.builtin.copy:
+      src: shipping.service
+      dest: /etc/systemd/system/shipping.service
+  
+  - name: start daemon service
+    ansible.builtin.service:
+      name: daemon-reload
+      state: restarted
+
+  - name: start  service
+    ansible.builtin.service:
+      name: shipping
+      state: started
+      enabled: yes
+  
+  - name: install mysql package
+    ansible.builtin.package:
+      name: mysql
+      state: present
+
+  - name: upload content to db
+    ansible.builtin.shell: |
+      mysql -h mysql.daws38sat.fun -uroot -pRoboShop@1 < /app/db/schema.sql
+      mysql -h mysql.daws38sat.fun -uroot -pRoboShop@1 < /app/db/app-user.sql 
+      mysql -h mysql.daws38sat.fun -uroot -pRoboShop@1 < /app/db/master-data.sql
+  
+  - name: start  service
+    ansible.builtin.service:
+      name: shipping
+      state: restarted
+  
+      
+      
+
