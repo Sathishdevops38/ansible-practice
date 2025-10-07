@@ -31,7 +31,7 @@
       remote_src: yes
   
   - name: mvn artifact 
-    ansible.builtin.command: |
+    ansible.builtin.shell: |
       cd /app 
       mvn clean package 
       mv target/shipping-1.0.jar shipping.jar
