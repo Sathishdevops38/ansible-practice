@@ -19,10 +19,21 @@
       shell: /sbin/nologin
       home: /app
 
+  # Safe to remove directory, because 2nd time if we run it will download freshly. no error if does not exist
+  - name: remove app directory
+    ansible.builtin.file:
+      path: /app
+      state: absent    
+
   - name: create app directory
     ansible.builtin.file:
       state: directory
       path: /app
+
+  - name: Delete payment file
+    ansible.builtin.file:
+      path: /tmp/payment.zip
+      state: absent    
   
   - name: download payment application
     ansible.builtin.get_url:
@@ -36,17 +47,21 @@
       remote_src: yes
 
   - name: install dependencies
-    ansible.builtin.shell: |
-      cd /app 
-      pip3 install -r requirements.txt
+    ansible.builtin.pip:
+      requirements: requirements.txt
+      executable: pip3.9
+    args:
+      chdir: /app
 
   - name: copy payment service
     ansible.builtin.copy:
       src: payment.service
       dest: /etc/systemd/system/payment.service
-      
-  - name: start  service
-    ansible.builtin.service:
+
+  - name: daemon reload enable and start
+    ansible.builtin.systemd_service:
       name: payment
+      enabled: true
       state: started
-      enabled: yes
+      daemon_reload: true
+      
