@@ -52,17 +52,21 @@
       dest: /app
       remote_src: yes
   
-  - name: mvn artifact 
-    ansible.builtin.shell: |
-      cd /app 
-      mvn clean package &
-      mv target/shipping-1.0.jar shipping.jar &
-  
+  - name: install dependencies
+    ansible.builtin.command: mvn clean package
+    args:
+      chdir: /app
+
+  - name: move jar file
+    ansible.builtin.command: mv target/shipping-1.0.jar shipping.jar
+    args:
+      chdir: /app
+
   - name: copy shipping service
     ansible.builtin.copy:
       src: shipping.service
       dest: /etc/systemd/system/shipping.service
-  
+
   - name: import shipping data into mysql
     community.mysql.mysql_db:
       state: import
