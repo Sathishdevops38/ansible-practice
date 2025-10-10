@@ -20,7 +20,6 @@
       system: true
       shell: /sbin/nologin
       home: /app
-  
   # Safe to remove directory, because 2nd time if we run it will download freshly. no error if does not exist
   - name: remove app directory
     ansible.builtin.file:
@@ -31,7 +30,7 @@
     ansible.builtin.file:
       state: directory
       path: /app
-  
+
   - name: Delete cart file
     ansible.builtin.file:
       path: /tmp/cart.zip
@@ -46,12 +45,12 @@
     ansible.builtin.unarchive:
       src: /tmp/cart.zip
       dest: /app
-      remote_src: yes  
-  
+      remote_src: yes
+
   - name: install dependencies
     community.general.npm:
       path: /app
-  
+
   - name: copy cart service
     ansible.builtin.copy:
       src: cart.service
@@ -63,5 +62,3 @@
       enabled: true
       state: started
       daemon_reload: true
-      
-

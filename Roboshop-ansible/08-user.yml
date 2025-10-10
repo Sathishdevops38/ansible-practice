@@ -12,7 +12,7 @@
     ansible.builtin.package:
       name: nodejs
       state: present
-  
+
   - name: create roboshop system user
     ansible.builtin.user:
       name: roboshop
@@ -20,12 +20,11 @@
       system: true
       shell: /sbin/nologin
       home: /app
-
   # Safe to remove directory, because 2nd time if we run it will download freshly. no error if does not exist
   - name: remove app directory
     ansible.builtin.file:
       path: /app
-      state: absent    
+      state: absent
 
   - name: create app directory
     ansible.builtin.file:
@@ -35,8 +34,8 @@
   - name: Delete user file
     ansible.builtin.file:
       path: /tmp/user.zip
-      state: absent    
-  
+      state: absent
+
   - name: download user application
     ansible.builtin.get_url:
       url: https://roboshop-artifacts.s3.amazonaws.com/user-v3.zip
@@ -46,12 +45,12 @@
     ansible.builtin.unarchive:
       src: /tmp/user.zip
       dest: /app
-      remote_src: yes  
-  
+      remote_src: yes
+
   - name: install dependencies
     community.general.npm:
       path: /app
-  
+
   - name: copy user service
     ansible.builtin.copy:
       src: user.service

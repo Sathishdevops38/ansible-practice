@@ -1,9 +1,9 @@
-- name: setup shipping service
+- name: configure shipping server
   hosts: shipping
   become: yes
   tasks:
-  - name: install maven 
-    ansible.builtin.package:
+  - name: install maven
+    ansible.builtin.dnf:
       name: "{{ item }}"
       state: present
     loop:
@@ -39,8 +39,8 @@
   - name: Delete shipping file
     ansible.builtin.file:
       path: /tmp/shipping.zip
-      state: absent   
-  
+      state: absent
+
   - name: download shipping application
     ansible.builtin.get_url:
       url: https://roboshop-artifacts.s3.amazonaws.com/shipping-v3.zip
@@ -51,7 +51,7 @@
       src: /tmp/shipping.zip
       dest: /app
       remote_src: yes
-  
+
   - name: install dependencies
     ansible.builtin.command: mvn clean package
     args:
@@ -71,7 +71,7 @@
     community.mysql.mysql_db:
       state: import
       name: all
-      login_host: mysql.daws86s.fun
+      login_host: mysql.daws38sat.fun
       login_user: root
       login_password: RoboShop@1
       target: "{{ item }}"
@@ -86,7 +86,3 @@
       enabled: true
       state: started
       daemon_reload: true
-  
-      
-      
-

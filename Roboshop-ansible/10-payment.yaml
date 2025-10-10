@@ -1,14 +1,14 @@
-- name: setup payment service
+- name: configure payment server
   hosts: payment
   become: yes
   tasks:
-  - name: install packages
-    ansible.builtin.package:
+  - name: install python package
+    ansible.builtin.dnf:
       name: "{{ item }}"
       state: present
     loop:
     - python3
-    - gcc 
+    - gcc
     - python3-devel
 
   - name: create roboshop system user
@@ -18,12 +18,11 @@
       system: true
       shell: /sbin/nologin
       home: /app
-
   # Safe to remove directory, because 2nd time if we run it will download freshly. no error if does not exist
   - name: remove app directory
     ansible.builtin.file:
       path: /app
-      state: absent    
+      state: absent
 
   - name: create app directory
     ansible.builtin.file:
@@ -33,8 +32,8 @@
   - name: Delete payment file
     ansible.builtin.file:
       path: /tmp/payment.zip
-      state: absent    
-  
+      state: absent
+
   - name: download payment application
     ansible.builtin.get_url:
       url: https://roboshop-artifacts.s3.amazonaws.com/payment-v3.zip
@@ -64,4 +63,3 @@
       enabled: true
       state: started
       daemon_reload: true
-      
